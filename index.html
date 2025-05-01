@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Typing Tester | By Rakibul Hasan</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- time out modal -->
+      <div class="modal hide">
+        <h2>Typing Result</h2>
+        <div class="result">
+          <p>Time</p>
+          <p class="result-display">0 second</p>
+        </div>
+        <div class="result">
+          <p>Title</p>
+          <p class="result-display">Lorem ipsum</p>
+        </div>
+        <div class="result">
+          <p>Word Typed</p>
+          <p class="result-display">--</p>
+        </div>
+        <div class="result">
+          <p>WPM</p>
+          <p class="result-display">--</p>
+        </div>
+
+        <div class="buttons">
+          <button id="reload">Type Again</button>
+        </div>
+      </div>
+
+      <header>
+        <h1>Typing Tester</h1>
+      </header>
+
+      <section>
+        <div>
+          <h3 id="type-title">Type : Lorem ipsum</h3>
+          <h3 id="timer-display">60 s</h3>
+        </div>
+        <div class="text-container">
+          <p id="text"></p>
+          <p id="display"></p>
+        </div>
+
+        <div id="pressed-key"></div>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
