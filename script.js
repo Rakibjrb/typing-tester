@@ -7,13 +7,8 @@ const texts = [
   "The city buzzed with energy as people hurried along the sidewalks. Car horns echoed through the streets, blending with the chatter of pedestrians. Olivia sipped her coffee, watching the world move around her. A street musician played a lively tune, adding charm to the morning rush. Despite the chaos, she felt calm, embracing the rhythm of the city. Every day was a new adventure, full of endless possibilities.",
 ];
 
-const generate_random_number = () => {
-  return Math.floor(Math.random() * 6);
-};
-
-const type_text = texts[generate_random_number()];
-
-const text = document.getElementById("text"),
+const type_text = texts[Math.floor(Math.random() * 6)],
+  text = document.getElementById("text"),
   display = document.getElementById("display"),
   timer_display = document.getElementById("timer-display"),
   pressed_key = document.getElementById("pressed-key"),
@@ -22,6 +17,13 @@ const text = document.getElementById("text"),
   modal = document.querySelector(".modal"),
   result_display = document.querySelectorAll(".result-display");
 
+// global variables
+let time = 10;
+let timer = false;
+let typed_text = "";
+let cursor_position = 0;
+let wrong_key_pressed = 0;
+
 //show text for type and show title
 text.textContent = type_text;
 const title = `${type_text.split(" ")[0]}  ${type_text.split(" ")[1]}   ${
@@ -29,28 +31,48 @@ const title = `${type_text.split(" ")[0]}  ${type_text.split(" ")[1]}   ${
 }`;
 type_title.textContent = `Type : ${title}`;
 
+//calculate total word typed during this time and calculate word per miniute
+const calculate_words = () => {
+  const calculate = { total_typed_word: 0, wpm: 40 };
+  const words = type_text.split(" ");
+  const word_typed = typed_text.split(" ");
+  word_typed.forEach((word, index) => {
+    if (word === words[index]) {
+      calculate.total_typed_word += 1;
+    }
+  });
+  return calculate;
+};
+
+//show result function
+const show_results = () => {
+  result_display[0].textContent = `60 second`;
+  result_display[1].textContent = title;
+  result_display[2].textContent = wrong_key_pressed;
+  result_display[3].textContent = calculate_words().total_typed_word;
+  result_display[4].textContent = calculate_words().wpm;
+};
+
 //timer handler function that show reveresed timer on right side
-let timer = false;
-let time = 60;
-
-const timer_handler = (state) => {
-  timer = state;
-
-  setInterval(() => {
-    if (time === 0) return;
+const timer_handler = () => {
+  timer = true;
+  const time_interval = setInterval(() => {
     time = time - 1;
     timer_display.textContent = `${time} s`;
+
+    if (time === 0) {
+      show_results();
+      modal.classList.remove("hide");
+      clearInterval(time_interval);
+    }
   }, 1000);
 };
 
 //detect wrong key pressed
-let typed_text = "";
-let cursor_position = 0;
-
 const detect_wrong_key_press = (key, position) => {
   if (key != type_text.charAt(position)) {
     display.style.color = "red";
-    return;
+    return (wrong_key_pressed += 1);
   }
   display.style.color = "#fff";
 
@@ -77,17 +99,11 @@ const main_logic = (key) => {
 };
 
 const typing_event_handler = (e) => {
-  //when timer is stopped the show typing results
-  if (time === 0) {
-    modal.classList.remove("hide");
-    result_display[0].textContent = `${60} second`;
-    result_display[1].textContent = title;
-    return;
-  }
-
+  if (time === 0) return;
   main_logic(e.key);
+
   if (timer === true) return;
-  timer_handler(true);
+  timer_handler();
 };
 
 window.addEventListener("keypress", typing_event_handler);
