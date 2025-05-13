@@ -18,11 +18,13 @@ const type_text = texts[Math.floor(Math.random() * 6)],
   result_display = document.querySelectorAll(".result-display");
 
 // global variables
-let time = 10;
+let time = 60;
 let timer = false;
 let typed_text = "";
 let cursor_position = 0;
 let wrong_key_pressed = 0;
+
+timer_display.textContent = `${time} s`;
 
 //show text for type and show title
 text.textContent = type_text;
@@ -33,14 +35,15 @@ type_title.textContent = `Type : ${title}`;
 
 //calculate total word typed during this time and calculate word per miniute
 const calculate_words = () => {
-  const calculate = { total_typed_word: 0, wpm: 40 };
-  const words = type_text.split(" ");
-  const word_typed = typed_text.split(" ");
-  word_typed.forEach((word, index) => {
-    if (word === words[index]) {
-      calculate.total_typed_word += 1;
-    }
-  });
+  const calculate = {
+    total_typed_word: 0,
+    wpm: 0,
+  };
+
+  const typed_word = Math.round(typed_text.split("").length / 5);
+  calculate.total_typed_word = typed_word;
+
+  calculate.wpm = Math.round(typed_word / 1);
   return calculate;
 };
 
@@ -48,8 +51,8 @@ const calculate_words = () => {
 const show_results = () => {
   result_display[0].textContent = `60 second`;
   result_display[1].textContent = title;
-  result_display[2].textContent = wrong_key_pressed;
-  result_display[3].textContent = calculate_words().total_typed_word;
+  result_display[2].textContent = calculate_words().total_typed_word;
+  result_display[3].textContent = wrong_key_pressed;
   result_display[4].textContent = calculate_words().wpm;
 };
 
